@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Win calulator for Circket match</title>
+</head>
+<body>
+<div style="display:flex;">
+<p>Enter the Team Name 1</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<p>Score 1</p>
+</div>
+<div style="display:flex;">
+<input type="text" id="teamInput1">
+&nbsp;&nbsp;
+<input type="text" id="scoreInput1">
+</div>
+<div style="display:flex;">
+<p>Enter the Team Name 2</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<p>Score 2</p>
+</div>
+<div style="display:flex;">
+<input type="text" id="teamInput2">
+&nbsp;&nbsp;
+<input type="text" id="scoreInput2">
+</div>
+<br/>
+<button onclick="resultEvent()"> Result </button>
+<br/>
+<br/>
+<div id="resultText"></div>
+
+<script>
+  var team1 = document.getElementById('teamInput1'),
+    team2 = document.getElementById('teamInput2'),
+    score1 = document.getElementById('scoreInput1'),
+    score2= document.getElementById('scoreInput2'),
+    message= document.getElementById('resultText');
+
+function resultEvent(){
+  let validTeam1=false, validTeam2=false,validScore1=false, validScore2=false,validScoreDifference=false;
+
+      if(team1.value== "" || team2.value == "" ||score1.value =="" || score2.value == "")
+      {
+        message.innerHTML=`<h3>Fill the fields required</h3>`;
+      }
+      else
+      {
+
+        if(/\s/.test(score1.value)){
+          message.innerHTML=`<h3>Please fill score without spaces</h3>`;
+        }
+        if(/\s/.test(score2.value)){
+          message.innerHTML=`<h3>Please fill score without spaces</h3>`;
+        }
+        validTeam1= validateTeamNames(team1.value);
+        validTeam2= validateTeamNames(team2.value);
+        let runwicket1=score1.value.split('/',2);
+        let runwicket2=score2.value.split('/',2);
+        validScore1=validateRunsWickets(runwicket1[0],runwicket1[1]);
+        validScore2=validateRunsWickets(runwicket2[0],runwicket2[1]);
+        if(team1.value!= "" && team2.value != "" &&team1.value == team2.value){
+          message.innerHTML=`<h3>Invalid Input</h3>`;
+        }
+        else{
+          validScoreDifference=  validateScoresDifference(runwicket1[0],runwicket2[0]);
+          if(validScoreDifference == false){
+            message.innerHTML=`<h3>Score difference is not valid</h3>`;
+          }
+          if(validTeam1 ==true && validTeam2 ==true && validScore1==true && validScore2 == true && validScoreDifference== true){
+            if(runwicket1[0]==runwicket2[0]){
+              message.innerHTML=`<h2>Match is drawn</h2>`;
+            }
+            else if(runwicket1[0]>runwicket2[0]){
+            
+              message.innerHTML=`<h2><span id="teamsName1"></span> won by  <span id="teamsScore1"></span> wickets</h2>`;
+              document.getElementById('teamsName1').innerHTML=team1.value;
+              document.getElementById('teamsScore1').innerHTML=runwicket1[1];
+            }
+            else{
+            
+              message.innerHTML=`<h2><span id="teamsName2"></span> won by  <span id="teamsScore2"></span> wickets</h2>`;
+            
+              document.getElementById('teamsName2').innerHTML=team2.value;
+              document.getElementById('teamsScore2').innerHTML=runwicket2[1];
+            }
+
+          }
+        }
+      }
+}
+
+function validateScoresDifference(score1, score2){
+  if(score1>score2)
+  {
+    if((score1-score2)<=7){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  else
+  {
+    if((score2-score1)<=7){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+}
+
+function validateTeamNames(teamName){
+  let letters = /^[A-Za-z]+$/;
+  if(teamName.match(letters)){
+    return true;
+  }
+  else{
+    message.innerHTML=`<h3>Please Input alphabet characters only</h3>`;
+    return false;
+  }
+}
+
+function validateRunsWickets(runs,wickets){
+  let threeDigitNums= /^[0-9]{3}$/, twoDigitNums= /^[0-9]{2}$/
+  ,singleDigitNum= /^[0-9]{1}$/;
+    if(runs.match(threeDigitNums) || runs.match(twoDigitNums) || runs.match(singleDigitNum)){
+      if(wickets.match(singleDigitNum) || wickets == '10'){
+          return true;
+      }
+      else{
+          message.innerHTML=`<h3>Please enter valid no. of wickets</h3>`;
+          return false;
+      }
+    }
+    else{
+        message.innerHTML=`<h3>Please enter valid no. of runs</h3>`;
+        return false;
+    }
+}
+</script>
+</body>
+</html>
